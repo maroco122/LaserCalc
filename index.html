@@ -25,10 +25,7 @@
             max-width: 400px;
             border: 1px solid #ddd;
         }
-        h2 {
-            margin-top: 0;
-            color: #333;
-        }
+        h2 { color: #333; }
         .option {
             margin: 10px 0;
             padding: 12px;
@@ -38,20 +35,10 @@
             transition: background-color 0.3s;
             font-size: 16px;
         }
-        .option:hover {
-            background-color: #c3d1ff;
-        }
-        .active {
-            background-color: #a3bffa;
-            color: white;
-        }
-        .input-section {
-            display: none;
-            margin-top: 15px;
-        }
-        .input-section.active {
-            display: block;
-        }
+        .option:hover { background-color: #c3d1ff; }
+        .active { background-color: #a3bffa; color: white; }
+        .input-section { display: none; margin-top: 15px; }
+        .input-section.active { display: block; }
         input {
             width: 80%;
             padding: 10px;
@@ -60,11 +47,6 @@
             border-radius: 5px;
             font-size: 16px;
             box-sizing: border-box;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px;
         }
         button {
             background-color: #4caf50;
@@ -76,85 +58,7 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        button:hover {
-            background-color: #45a049;
-        }
-        #resultPopup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            z-index: 1000;
-            width: 80%;
-            max-width: 350px;
-            display: none;
-        }
-        #popupImage {
-            max-width: 100%;
-            margin-bottom: 10px;
-        }
-        .recommend-button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-            animation: blink 1s 3; /* 1초에 3번 깜빡임 */
-        }
-        .recommend-button:hover {
-            background-color: #45a049;
-        }
-        #resultText {
-            font-size: 18px;
-            color: #ff0000; /* 빨간색 */
-            font-weight: bold; /* 굵은 글씨 */
-            animation: blink 0.25s 4; /* 1초에 4번 깜빡임 */
-        }
-        @keyframes blink {
-            50% {
-                opacity: 0;
-            }
-        }
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-        }
-        @media (max-width: 480px) {
-            .calculator {
-                padding: 15px;
-            }
-            input {
-                width: 90%;
-            }
-            button {
-                width: 90%;
-                max-width: 200px;
-            }
-            #resultPopup {
-                width: 90%;
-            }
-            .recommend-button {
-                font-size: 14px;
-                padding: 8px 15px;
-                width: 90%;
-            }
-        }
+        button:hover { background-color: #45a049; }
     </style>
 </head>
 <body>
@@ -166,85 +70,56 @@
         <div id="area-input" class="input-section">
             <input type="number" id="areaWidth" placeholder="가로 (cm)" step="0.1">
             <input type="number" id="areaHeight" placeholder="세로 (cm)" step="0.1">
-            <div class="button-container">
-                <button onclick="calculate('area')">확인</button>
-            </div>
+            <button onclick="calculate('area')">확인</button>
         </div>
 
         <div id="volume-input" class="input-section">
             <input type="number" id="volumeWidth" placeholder="가로 (cm)" step="0.1">
             <input type="number" id="volumeHeight" placeholder="세로 (cm)" step="0.1">
             <input type="number" id="volumeDepth" placeholder="높이 (cm)" step="0.1">
-            <div class="button-container">
-                <button onclick="calculate('volume')">확인</button>
-            </div>
+            <button onclick="calculate('volume')">확인</button>
         </div>
     </div>
 
-    <div id="overlay" onclick="closePopup()"></div>
-    <div id="resultPopup">
-        <img id="popupImage" src="https://store.img11.co.kr/71175441/2b5d28b1-ea27-4aa4-b40a-dcfd3df1a457_1740622108882.jpg" alt="3356914-5-1.jpg">
-        <div id="resultText"></div>
-        <a href="https://smartstore.naver.com/real09/products/9626048651" target="_blank" class="recommend-button">추천 레이저 거리 측정기</a>
-    </div>
-
     <script>
-        let activeSection = '';
-
-        function selectCalculation(type) {
-            activeSection = type;
-            document.getElementById('area-input').classList.remove('active');
-            document.getElementById('volume-input').classList.remove('active');
-            document.getElementById('resultText').innerText = '';
-
-            const options = document.getElementsByClassName('option');
-            for (let option of options) {
-                option.classList.remove('active');
-            }
-            event.target.classList.add('active');
-
-            if (type === 'area') {
-                document.getElementById('area-input').classList.add('active');
-            } else if (type === 'volume') {
-                document.getElementById('volume-input').classList.add('active');
-            }
-        }
-
-        function calculate(type) {
-            let result = 0;
-            let resultText = '';
-
-            if (type === 'area') {
-                const width = parseFloat(document.getElementById('areaWidth').value);
-                const height = parseFloat(document.getElementById('areaHeight').value);
-                if (width && height) {
-                    result = width * height;
-                    resultText = `면적: ${result.toFixed(2)} cm²`;
-                } else {
-                    resultText = '가로와 세로를 입력해 주세요!';
+        (function() {
+            document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+            document.addEventListener('keydown', function(e) {
+                if (e.keyCode === 123 || 
+                    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+                    (e.ctrlKey && e.keyCode === 85)) {
+                    e.preventDefault();
                 }
-            } else if (type === 'volume') {
-                const width = parseFloat(document.getElementById('volumeWidth').value);
-                const height = parseFloat(document.getElementById('volumeHeight').value);
-                const depth = parseFloat(document.getElementById('volumeDepth').value);
-                if (width && height && depth) {
-                    result = width * height * depth;
-                    resultText = `부피: ${result.toFixed(2)} cm³`;
-                } else {
-                    resultText = '가로, 세로, 높이를 입력해 주세요!';
-                }
+            });
+
+            function obfuscatedFunction(a, b, c) {
+                let d = parseFloat(document.getElementById(a).value),
+                    e = parseFloat(document.getElementById(b).value),
+                    f = c ? parseFloat(document.getElementById(c).value) : 1;
+                return isNaN(d) || isNaN(e) || (c && isNaN(f)) ? '입력 오류!' : (d * e * f).toFixed(2);
             }
 
-            document.getElementById('resultText').innerText = resultText;
-            document.getElementById('resultPopup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+            window.selectCalculation = function(a) {
+                document.getElementById('area-input').classList.remove('active');
+                document.getElementById('volume-input').classList.remove('active');
+                let options = document.getElementsByClassName('option');
+                for (let option of options) { option.classList.remove('active'); }
+                event.target.classList.add('active');
 
-        function closePopup() {
-            document.getElementById('resultPopup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('resultText').innerText = '';
-        }
+                if (a === 'area') {
+                    document.getElementById('area-input').classList.add('active');
+                } else if (a === 'volume') {
+                    document.getElementById('volume-input').classList.add('active');
+                }
+            };
+
+            window.calculate = function(a) {
+                let result = a === 'area' 
+                    ? obfuscatedFunction('areaWidth', 'areaHeight') 
+                    : obfuscatedFunction('volumeWidth', 'volumeHeight', 'volumeDepth');
+                alert(result.includes('입력 오류') ? '값을 정확히 입력하세요!' : `결과: ${result} ${a === 'area' ? 'cm²' : 'cm³'}`);
+            };
+        })();
     </script>
 </body>
 </html>
