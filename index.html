@@ -59,6 +59,57 @@
             transition: background-color 0.3s;
         }
         button:hover { background-color: #45a049; }
+
+        #resultPopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 1000;
+            width: 80%;
+            max-width: 350px;
+            display: none;
+        }
+        #popupImage {
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+        .recommend-button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            animation: blink 1s 3;
+        }
+        .recommend-button:hover { background-color: #45a049; }
+        #resultText {
+            font-size: 18px;
+            color: #ff0000;
+            font-weight: bold;
+            animation: blink 0.25s 4;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +117,7 @@
         <h2>면적 및 부피 계산기</h2>
         <div class="option" onclick="selectCalculation('area')">면적 계산</div>
         <div class="option" onclick="selectCalculation('volume')">부피 계산</div>
-        
+
         <div id="area-input" class="input-section">
             <input type="number" id="areaWidth" placeholder="가로 (cm)" step="0.1">
             <input type="number" id="areaHeight" placeholder="세로 (cm)" step="0.1">
@@ -81,16 +132,25 @@
         </div>
     </div>
 
+    <div id="overlay" onclick="closePopup()"></div>
+    <div id="resultPopup">
+        <img id="popupImage" src="https://store.img11.co.kr/71175441/2b5d28b1-ea27-4aa4-b40a-dcfd3df1a457_1740622108882.jpg" alt="3356914-5-1.jpg">
+        <div id="resultText"></div>
+        <a href="https://smartstore.naver.com/real09/products/9626048651" target="_blank" class="recommend-button">추천 레이저 거리 측정기</a>
+    </div>
+
     <script>
         (function() {
             document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
             document.addEventListener('keydown', function(e) {
-                if (e.keyCode === 123 || 
-                    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
-                    (e.ctrlKey && e.keyCode === 85)) {
+                if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
                     e.preventDefault();
                 }
             });
+
+            console.log = function() {};
+            console.error = function() {};
+            console.warn = function() {};
 
             function obfuscatedFunction(a, b, c) {
                 let d = parseFloat(document.getElementById(a).value),
@@ -114,10 +174,15 @@
             };
 
             window.calculate = function(a) {
-                let result = a === 'area' 
-                    ? obfuscatedFunction('areaWidth', 'areaHeight') 
-                    : obfuscatedFunction('volumeWidth', 'volumeHeight', 'volumeDepth');
-                alert(result.includes('입력 오류') ? '값을 정확히 입력하세요!' : `결과: ${result} ${a === 'area' ? 'cm²' : 'cm³'}`);
+                let result = a === 'area' ? obfuscatedFunction('areaWidth', 'areaHeight') : obfuscatedFunction('volumeWidth', 'volumeHeight', 'volumeDepth');
+                document.getElementById('resultText').innerText = result.includes('입력 오류') ? '값을 정확히 입력하세요!' : `결과: ${result} ${a === 'area' ? 'cm²' : 'cm³'}`;
+                document.getElementById('resultPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            };
+
+            window.closePopup = function() {
+                document.getElementById('resultPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
             };
         })();
     </script>
