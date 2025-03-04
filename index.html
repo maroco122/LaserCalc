@@ -6,185 +6,183 @@
     <title>면적 및 부피 계산기</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            background-color: #f5f7fa;
-            padding: 10px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
-        .calculator {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h2 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            font-weight: 600;
             text-align: center;
+        }
+        select, input {
             width: 100%;
-            max-width: 400px;
-            border: 1px solid #ddd;
-        }
-        h2 { color: #333; }
-        .option {
-            margin: 10px 0;
             padding: 12px;
-            background-color: #d6e4ff;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 16px;
-        }
-        .option:hover { background-color: #c3d1ff; }
-        .active { background-color: #a3bffa; color: white; }
-        .input-section { display: none; margin-top: 15px; }
-        .input-section.active { display: block; }
-        input {
-            width: 80%;
-            padding: 10px;
-            margin: 8px 0;
+            margin: 10px 0;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        select:focus, input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        label {
+            color: #7f8c8d;
+            font-size: 14px;
+            display: block;
+            text-align: left;
+            margin: 5px 0 2px 0;
         }
         button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        button:hover { background-color: #45a049; }
-
-        #resultPopup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            z-index: 1000;
-            width: 80%;
-            max-width: 350px;
-            display: none;
-        }
-        #popupImage {
-            max-width: 100%;
-            margin-bottom: 10px;
-        }
-        .recommend-button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-            animation: blink 1s 3;
-        }
-        .recommend-button:hover { background-color: #45a049; }
-        #resultText {
-            font-size: 18px;
-            color: #ff0000;
-            font-weight: bold;
-            animation: blink 0.25s 4;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        h3 {
+            color: #2c3e50;
+            margin: 15px 0 0 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        .links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .links a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .links a:hover {
+            background-color: #dfe6e9;
         }
     </style>
 </head>
 <body>
-    <div class="calculator">
+    <div class="container">
         <h2>면적 및 부피 계산기</h2>
-        <div class="option" onclick="selectCalculation('area')">면적 계산</div>
-        <div class="option" onclick="selectCalculation('volume')">부피 계산</div>
+        <label for="calculationType">계산 유형 선택</label>
+        <select id="calculationType" onchange="updateInputs()">
+            <option value="rectangle">직사각형 면적</option>
+            <option value="triangle">삼각형 면적</option>
+            <option value="circle">원 면적</option>
+            <option value="trapezoid">사다리꼴 면적</option>
+            <option value="parallelogram">평행사변형 면적</option>
+            <option value="ellipse">타원 면적</option>
+            <option value="cuboid">직육면체 부피</option>
+            <option value="cylinder">원기둥 부피</option>
+            <option value="sphere">구 부피</option>
+            <option value="cone">원뿔 부피</option>
+            <option value="pyramid">사각뿔 부피</option>
+            <option value="prism">사각기둥 부피</option>
+            <option value="ellipsoid">타원체 부피</option>
+        </select>
 
-        <div id="area-input" class="input-section">
-            <input type="number" id="areaWidth" placeholder="가로 (cm)" step="0.1">
-            <input type="number" id="areaHeight" placeholder="세로 (cm)" step="0.1">
-            <button onclick="calculate('area')">확인</button>
-        </div>
-
-        <div id="volume-input" class="input-section">
-            <input type="number" id="volumeWidth" placeholder="가로 (cm)" step="0.1">
-            <input type="number" id="volumeHeight" placeholder="세로 (cm)" step="0.1">
-            <input type="number" id="volumeDepth" placeholder="높이 (cm)" step="0.1">
-            <button onclick="calculate('volume')">확인</button>
-        </div>
-    </div>
-
-    <div id="overlay" onclick="closePopup()"></div>
-    <div id="resultPopup">
-        <img id="popupImage" src="https://store.img11.co.kr/71175441/2b5d28b1-ea27-4aa4-b40a-dcfd3df1a457_1740622108882.jpg" alt="3356914-5-1.jpg">
-        <div id="resultText"></div>
-        <a href="https://smartstore.naver.com/real09/products/9626048651" target="_blank" class="recommend-button">추천 레이저 거리 측정기</a>
+        <div id="inputs"></div>
+        <button onclick="calculate()">확인</button>
+        <h3 id="result"></h3>
+        <div class="links" id="linkContainer"></div>
     </div>
 
     <script>
-        (function() {
-            document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-            document.addEventListener('keydown', function(e) {
-                if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
-                    e.preventDefault();
-                }
+        function updateInputs() {
+            const type = document.getElementById("calculationType").value;
+            const inputDiv = document.getElementById("inputs");
+            inputDiv.innerHTML = "";
+
+            const inputFields = {
+                rectangle: ["가로", "세로"],
+                triangle: ["밑변", "높이"],
+                circle: ["반지름"],
+                trapezoid: ["윗변", "아랫변", "높이"],
+                parallelogram: ["밑변", "높이"],
+                ellipse: ["장축 반지름", "단축 반지름"],
+                cuboid: ["가로", "세로", "높이"],
+                cylinder: ["반지름", "높이"],
+                sphere: ["반지름"],
+                cone: ["반지름", "높이"],
+                pyramid: ["밑면적", "높이"],
+                prism: ["밑면적", "높이"],
+                ellipsoid: ["장축 반지름", "단축 반지름", "높이 반지름"]
+            };
+
+            inputFields[type].forEach(field => {
+                inputDiv.innerHTML += `<label>${field}:</label><input type='number' id='${field}' placeholder='${field} 입력'>`;
             });
+        }
 
-            console.log = function() {};
-            console.error = function() {};
-            console.warn = function() {};
+        function calculate() {
+            const type = document.getElementById("calculationType").value;
+            let result = 0;
+            const π = Math.PI;
 
-            function obfuscatedFunction(a, b, c) {
-                let d = parseFloat(document.getElementById(a).value),
-                    e = parseFloat(document.getElementById(b).value),
-                    f = c ? parseFloat(document.getElementById(c).value) : 1;
-                return isNaN(d) || isNaN(e) || (c && isNaN(f)) ? '입력 오류!' : (d * e * f).toFixed(2);
+            function getValue(id) {
+                return parseFloat(document.getElementById(id).value) || 0;
             }
 
-            window.selectCalculation = function(a) {
-                document.getElementById('area-input').classList.remove('active');
-                document.getElementById('volume-input').classList.remove('active');
-                let options = document.getElementsByClassName('option');
-                for (let option of options) { option.classList.remove('active'); }
-                event.target.classList.add('active');
+            switch(type) {
+                case "rectangle": result = getValue("가로") * getValue("세로"); break;
+                case "triangle": result = (getValue("밑변") * getValue("높이")) / 2; break;
+                case "circle": result = π * Math.pow(getValue("반지름"), 2); break;
+                case "trapezoid": result = ((getValue("윗변") + getValue("아랫변")) * getValue("높이")) / 2; break;
+                case "parallelogram": result = getValue("밑변") * getValue("높이"); break;
+                case "ellipse": result = π * getValue("장축 반지름") * getValue("단축 반지름"); break;
+                case "cuboid": result = getValue("가로") * getValue("세로") * getValue("높이"); break;
+                case "cylinder": result = π * Math.pow(getValue("반지름"), 2) * getValue("높이"); break;
+                case "sphere": result = (4/3) * π * Math.pow(getValue("반지름"), 3); break;
+                case "cone": result = (1/3) * π * Math.pow(getValue("반지름"), 2) * getValue("높이"); break;
+                case "pyramid": result = (1/3) * getValue("밑면적") * getValue("높이"); break;
+                case "prism": result = getValue("밑면적") * getValue("높이"); break;
+                case "ellipsoid": result = (4/3) * π * getValue("장축 반지름") * getValue("단축 반지름") * getValue("높이 반지름"); break;
+            }
 
-                if (a === 'area') {
-                    document.getElementById('area-input').classList.add('active');
-                } else if (a === 'volume') {
-                    document.getElementById('volume-input').classList.add('active');
-                }
-            };
+            document.getElementById("result").innerText = `결과: ${result.toFixed(2)}`;
 
-            window.calculate = function(a) {
-                let result = a === 'area' ? obfuscatedFunction('areaWidth', 'areaHeight') : obfuscatedFunction('volumeWidth', 'volumeHeight', 'volumeDepth');
-                document.getElementById('resultText').innerText = result.includes('입력 오류') ? '값을 정확히 입력하세요!' : `결과: ${result} ${a === 'area' ? 'cm²' : 'cm³'}`;
-                document.getElementById('resultPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            };
+            // 링크 추가
+            const linkContainer = document.getElementById("linkContainer");
+            linkContainer.innerHTML = `
+                <a href="https://smartstore.naver.com/allgagu/products/7816266726" target="_blank">일제 명품 물분사기 보러가기</a>
+                <a href="https://smartstore.naver.com/allgagu/products/11467783831" target="_blank">일제 명품 호스릴 보러가기</a>
+                <a href="https://smartstore.naver.com/allgagu/products/7074592886" target="_blank">시원하게 한방에! 수중펌프</a>
+            `;
+        }
 
-            window.closePopup = function() {
-                document.getElementById('resultPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            };
-        })();
+        updateInputs();
     </script>
 </body>
 </html>
